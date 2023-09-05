@@ -3,11 +3,20 @@ let index = 0;
 let frame = 0;
 let playMode = 'sustain';
 let song;
+let button;
+
+function nextMem() {
+  index++;
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   soundFormats('wav');
   song = loadSound('sound/Cut_2011_1.wav');
+
+  button = createButton('next memory');
+  button.position(40, 55);
+  button.mousePressed(nextMem);
 
   fetch("./json/memories2.json").then(function(response) {
     return response.json();
@@ -99,9 +108,9 @@ function keyPressed(){
 
 }
 
-function mouseClicked(){
-  song.play();
-}
+// function mouseClicked(){
+//   song.play();
+// }
 
 function drawChart(){
   
