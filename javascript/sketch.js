@@ -1,10 +1,13 @@
 let memories;
 let index = 0;
 let frame = 0;
+let playMode = 'sustain';
+let song;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
+  soundFormats('wav');
+  song = loadSound('sound/Cut_2011_1.wav');
 
   fetch("./json/memories2.json").then(function(response) {
     return response.json();
@@ -23,7 +26,7 @@ function setup() {
 }
 
 function draw() {
-  background(100,83,210,200);
+ 
   let temporarymemory = memories[index];
   let tmenergy = temporarymemory.energy;
   let tmvalence = temporarymemory.valence;
@@ -34,10 +37,20 @@ function draw() {
   let tmsong = temporarymemory.songname;
   let tmartist = temporarymemory.artist;
   let tmmemory = temporarymemory.description;
+  let love = 'love';
+  let m = match(tmmemory,love);
+
+  if (m == 'love'){
+    background(240,20,90);
+  } else {
+    background(100,83,210,200);
+  }
 
   textSize(60);
-  fill(255,255,255,30);
+  fill(255,255,255,40);
   text(tmmemory,20,70,width-40,600);
+  
+
   
 
   translate(width/2,height/2);
@@ -64,6 +77,7 @@ function draw() {
 }
 
 function keyPressed(){
+
   if (index == 0){
     if (keyCode == RIGHT_ARROW){
       index++;
@@ -81,12 +95,12 @@ function keyPressed(){
     }
     }
   }
-  // if (keyCode == RIGHT_ARROW){
-  //   index++;
-  // } else if (keyCode == LEFT_ARROW){
-  //   index--;
-  // }
+ 
 
+}
+
+function mouseClicked(){
+  song.play();
 }
 
 function drawChart(){
