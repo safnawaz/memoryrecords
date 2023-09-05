@@ -1,19 +1,12 @@
-//no animation / interaction chart
-//if you want to use animation or create a loading state look at the cat fact example from last week 
-// use a boolean to control when your data is loaded
-
-
 let memories;
-let index = 1;
+let index = 0;
 let frame = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  //no animation / interaction chart
-  
 
-  fetch("./json/memories.json").then(function(response) {
+  fetch("./json/memories2.json").then(function(response) {
     return response.json();
   }).then(function(data) {
 
@@ -60,24 +53,39 @@ function draw() {
  textSize(16);
  fill(255,255,255,100);
  text(tmartist,20,50);
- text(index,20,70);
+ text(index+1,20,70);
 
 
 
 
   frame = frame + increment;
   
-  if(index == 26){
-    index = 0;
-  }
+ 
 }
 
 function keyPressed(){
-  if (keyCode == RIGHT_ARROW){
-    index++;
-  } else if (keyCode == LEFT_ARROW){
-    index--;
+  if (index == 0){
+    if (keyCode == RIGHT_ARROW){
+      index++;
+    }
+  } else if (index == memories.length-1){
+    if (keyCode == LEFT_ARROW){
+      index--;
+    }
+  } else {
+    if (keyCode == RIGHT_ARROW){
+      index++;
+    } else {
+    if (keyCode == LEFT_ARROW){
+      index--;
+    }
+    }
   }
+  // if (keyCode == RIGHT_ARROW){
+  //   index++;
+  // } else if (keyCode == LEFT_ARROW){
+  //   index--;
+  // }
 
 }
 
