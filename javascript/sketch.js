@@ -18,7 +18,7 @@ function setup() {
   // button.position(30, 55);
   // button.mousePressed(nextMem);
 
-  fetch("./json/memories2.json").then(function(response) {
+  fetch("./json/memories.json").then(function(response) {
     return response.json();
   }).then(function(data) {
 
@@ -59,6 +59,8 @@ function draw() {
     background(255,xMap,yMap);
 
   }
+
+  
   
   
 // making a change if word 'love' is detected in memory description
@@ -84,12 +86,18 @@ function draw() {
   
 
   translate(width/2,height/2);
-  
+
+
   fill(255,150);
   strokeWeight(20);
   pulse = sin(frame)*size;
   ellipse(0,0,pulse,pulse);
   noStroke();
+  
+  push();
+  rotate(frame*5);
+  makeSymbol();
+  pop();
   
  translate(-width/2,-height/2);
  textSize(20);
@@ -98,7 +106,7 @@ function draw() {
  textSize(16);
  fill(255,255,255,100);
  text(tmartist,20,50);
- text(index+1,20,70);
+ text(index+1 + " of " + str(memories.length),20,70);
 
 
 
@@ -108,8 +116,13 @@ function draw() {
  
 }
 
-function valenceChange(){
-  
+function makeSymbol(){
+  fill(255);
+  strokeWeight(5);
+  stroke(255);
+  arc(0,0,100,100,0,PI);
+  fill(0,0);
+  arc(0,0,100,100,PI,0);
 }
 
 function keyPressed(){
