@@ -5,18 +5,22 @@ let playMode = 'sustain';
 let song;
 let button;
 
-function nextMem() {
-  index++;
-}
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  background(0);
   soundFormats('wav');
   song = loadSound('sound/Cut_2011_1.wav');
-
-  // button = createButton('next memory');
-  // button.position(30, 55);
-  // button.mousePressed(nextMem);
+ 
+  let buttonColor = color(255);
+  
+  // button = createButton('Explore Memories');
+  // button.style('background-color',buttonColor);
+  // button.style('border', 'none');
+  // button.style('text-align','center');
+  // button.style('font-size','16px');
+  // button.style('border-radius','4px');
+  // button.position(width/2 - 70,height/2 - 10);
+  // button.mousePressed();
 
   fetch("./json/memories.json").then(function(response) {
     return response.json();
@@ -35,17 +39,18 @@ function setup() {
 }
 
 function draw() {
+
   let xMap = map(mouseX,0,width,0,100);
   let yMap = map(mouseY,0,height,0,100);
 
   let temporarymemory = memories[index];
   let tmenergy = temporarymemory.energy;
   let tmvividness = temporarymemory.vivid;
-  let size = map(tmvividness,1,5,0,400);
-  let increment = map(tmenergy,1,5,0.003,0.01);
   let tmsong = temporarymemory.songname;
   let tmartist = temporarymemory.artist;
   let tmmemory = temporarymemory.description;
+  let size = map(tmvividness,1,5,0,400);
+  let increment = map(tmenergy,1,5,0.003,0.01);
 
 
   let tmvalence = temporarymemory.valence;
@@ -96,7 +101,7 @@ function draw() {
   
   push();
   rotate(frame*5);
-  makeSymbol();
+  makeSymbol(0,0,100,100);
   pop();
   
  translate(-width/2,-height/2);
@@ -110,19 +115,23 @@ function draw() {
 
 
 
-
   frame = frame + increment;
   
- 
+  push();
+  makeSymbol(mouseX,mouseY,50,50);
+  pop();
+
 }
 
-function makeSymbol(){
+function makeSymbol(xPosition,yPosition,sizeX,sizeY){
+  push();
   fill(255);
   strokeWeight(5);
   stroke(255);
-  arc(0,0,100,100,0,PI);
+  arc(xPosition,yPosition,sizeX,sizeY,0,PI);
   fill(0,0);
-  arc(0,0,100,100,PI,0);
+  arc(xPosition,yPosition,sizeX,sizeY,PI,0);
+  pop();
 }
 
 function keyPressed(){
@@ -148,8 +157,17 @@ function keyPressed(){
 
 }
 
-// function mouseClicked(){
-//   song.play();
-// }
+function windowResized() {
+
+  resizeCanvas(windowWidth, windowHeight);
+
+}
+
+function mousePressed(){
+  makeSymbol(mouseX,mouseY+100, 45, 45);
+  // text("test",mouseX,mouseY);
+  // ellipse(mouseX,mouseY,50,50);
+  // song.play();
+}
 
 
