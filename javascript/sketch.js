@@ -1,9 +1,12 @@
 let memories;
+let cued;
 let index = 0;
 let frame = 0;
 let playMode = 'sustain';
 let song;
 let button;
+
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -22,21 +25,31 @@ function setup() {
   // button.position(width/2 - 70,height/2 - 10);
   // button.mousePressed();
 
+  //chosen memories setting up, getting memories
   fetch("./json/memories.json").then(function(response) {
     return response.json();
   }).then(function(data) {
 
     console.log(data);
     memories = data.memories;
-
-    //using no Loop? you can just call your function once the data is loaded
     
-  
+  }).catch(function(err) {
+    console.log(`Something went wrong: ${err}`);
+  });
+
+  fetch("./json/cued.json").then(function(response) {
+    return response.json();
+  }).then(function(data) {
+
+    console.log(data);
+    cued = data.cued;
+    
   }).catch(function(err) {
     console.log(`Something went wrong: ${err}`);
   });
 
 }
+
 
 function draw() {
 
@@ -57,13 +70,18 @@ function draw() {
   let color;
   color = map(tmvalence,1,5,0,255);
 
-  if (tmvalence <=3){
+  if (tmvalence == 1){
     background(xMap,yMap,255);
-
-  } else {
+  } else if (tmvalence == 2){
+    background(xMap,yMap,200);
+  } else if (tmvalence ==3) {
+    background(xMap,yMap,50);
+  } else if (tmvalence ==4){
+    background(200,xMap,yMap)
+  } else if (tmvalence ==5){
     background(255,xMap,yMap);
-
   }
+
 
   
   
@@ -169,5 +187,7 @@ function mousePressed(){
   // ellipse(mouseX,mouseY,50,50);
   // song.play();
 }
+
+
 
 
