@@ -1,35 +1,58 @@
-let memories;
+let selmemories;
+let cuedmemories;
+let memarray;
 let index = 0;
 let frame = 0;
+let curmemtype = 1;
 let button;
 let memTime = true;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     background(0,0,0);
-    fetch("./json/memories.json").then(function(response) {
+    fetch("./json/selectedmems.json").then(function(response) {
         return response.json();
       }).then(function(data) {
     
         console.log(data);
-        memories = data.memories;
+        selmemories = data.selectedmemories;
         
       }).catch(function(err) {
         console.log(`Something went wrong: ${err}`);
       });
 
+      fetch("./json/cuedmems.json").then(function(response) {
+        return response.json();
+      }).then(function(data) {
+    
+        console.log(data);
+        cuedmemories = data.cuedmemories;
+        
+      }).catch(function(err) {
+        console.log(`Something went wrong: ${err}`);
+      });
+
+      button = createButton('Switch Memories');
+      button.mousePressed(memorySwitch);
+      button.position(10.5*width/12,height/24);
         // button = createButton('Explore Memories');
         // button.style('background-color',buttonColor);
-        // button.style('border', 'none');
-        // button.style('text-align','center');
-        // button.style('font-size','16px');
-        // button.style('border-radius','4px');
+        button.style('border', 'none');
+        button.style('text-align','center');
+        button.style('font-size','16px');
+        button.style('border-radius','4px');
         // button.position(width/2 - 70,height/2 - 10);
         // button.mousePressed(memoryStart);
-        
-
+    
       
   }
+function memorySwitch(){
+    if (curmemtype == 1){
+        curmemtype = 0;
+    } else if (curmemtype == 0){
+        curmemtype = 1;
+    }
+}
 
 function memoryStart(){
     memTime = true;
@@ -39,10 +62,10 @@ function memoryStart(){
 function makeChosenMem(memoryArray){
     let chosenMemory = memoryArray[index];
     let chosenVividness = chosenMemory.vivid;
-    let chosenEnergy = chosenMemory.energy;
-    let chosenValence = chosenMemory.valence;
-    let chosenSong = chosenMemory.songname;
-    let chosenArtist = chosenMemory.artist;
+    let chosenEnergy = chosenMemory.memenergy;
+    let chosenValence = chosenMemory.memvalence;
+    let chosenSong = chosenMemory.Title;
+    let chosenArtist = chosenMemory.Artist;
     let chosenDesc = chosenMemory.description;
 
     let size = map(chosenVividness,1,5,0,500)
@@ -70,8 +93,9 @@ function makeChosenMem(memoryArray){
     text(chosenDesc,20,70,width-40,600);
     
     push();
-        // rotate(frame);
-        makeSymbol(width/2,height/2,90,90);
+        translate(width/2,height/2);
+        rotate(frame*5);
+        makeSymbol(0,0,90,90);
     pop();
 
     push();
@@ -90,7 +114,7 @@ function makeChosenMem(memoryArray){
     textSize(16);
     fill(255,255,255,100);
     text(chosenArtist,20,50);
-    text(index+1 + " of " + str(memories.length),20,70);
+    text(index+1 + " of " + str(memoryArray.length),20,70);
     pop();
 
     frame = frame + growth;
@@ -99,11 +123,24 @@ function makeChosenMem(memoryArray){
 }
 
 function draw(){
-    if (memTime == true){
-        makeChosenMem(memories);
-    }
-  
+    if (curmemtype == 0){
+        memarray = selmemories;
 
+    } else {
+        memarray = cuedmemories;
+    }
+
+    makeChosenMem(memarray);
+
+    // makeBubbles();
+
+}
+
+function makeBubbles(){
+  
+        ellipse(random(0,width),random(0,height),random(30,100));
+    
+    
 }
 
 function keyPressed(){
@@ -112,7 +149,7 @@ function keyPressed(){
       if (keyCode == RIGHT_ARROW){
         index++;
       }
-    } else if (index == memories.length-1){
+    } else if (index == memarray.length-1){
       if (keyCode == LEFT_ARROW){
         index--;
       }
@@ -139,4 +176,17 @@ function keyPressed(){
     arc(xPosition,yPosition,sizeX,sizeY,PI,0);
     pop();
   }
+
+  function addGui(){
+    if(curmemtype == 0)
+    {
+        button = createButton("Chosen Songs");
+    }else if(curmemtype == 1){
+        button = createButton("Billboard Songs");
+    }
+
+    button.addClass("button");
+    button.mousePressed(handleButtonPress); 
+  }
+
 
