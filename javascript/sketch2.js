@@ -3,13 +3,43 @@ let cuedmemories;
 let memarray;
 let index = 0;
 let frame = 0;
-let curmemtype = 1;
+let curmemtype = 0;
 let button;
 let memTime = true;
 
+
+class symbol{
+    constructor(_x, _y, diam, colour) {
+        this.xPos = _x;
+        this.yPos = _y;
+        this.size = diam;
+        this.backgroundColour = colour;
+        this.xMotion = random(-3,3);
+        this.yMotion = random(-3,3);
+      }
+
+      display() {    
+        push();
+        strokeWeight(this.size*0.03);
+        stroke(this.backgroundColour);
+          translate(this.xPos,this.yPos);
+          fill(this.backgroundColour);
+          arc(0,0,this.size, this.size,0,PI);
+          fill(0,0);
+          arc(0,0,this.size, this.size,PI,0);
+        pop();
+      
+      
+      this.xPos += this.xMotion;
+      this.yPos += this.yMotion;
+      }  
+    
+    }
+let mySymbols = [];
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    background(0,0,0);
+    // background(255,0,0);
     fetch("./json/selectedmems.json").then(function(response) {
         return response.json();
       }).then(function(data) {
@@ -43,9 +73,31 @@ function setup() {
         button.style('border-radius','4px');
         // button.position(width/2 - 70,height/2 - 10);
         // button.mousePressed(memoryStart);
-    
+
+        // textAlign(CENTER);
+        
+        sel = createSelect();
+        sel.position(10.5*width/12,height*2/24);
+        sel.style('border', 'none');
       
+        sel.option('1');
+        sel.option('2');
+        sel.option('3');
+        sel.selected('1');
+        sel.changed(memorySelect);
+
+        // for (let i=0; i<10; i++) {
+        //     mySymbols.push(new symbol(random(0,width),random(0,height),random(30,100),color(255,random(0,255),random(0,255))));
+        //   }
+          
+          
   }
+  function memorySelect() {
+    let item = sel.value();
+    index = item-1;
+    
+  }
+
 function memorySwitch(){
     if (curmemtype == 1){
         curmemtype = 0;
@@ -60,6 +112,7 @@ function memoryStart(){
 }
 
 function makeChosenMem(memoryArray){
+  
     let chosenMemory = memoryArray[index];
     let chosenVividness = chosenMemory.vivid;
     let chosenEnergy = chosenMemory.memenergy;
@@ -67,7 +120,7 @@ function makeChosenMem(memoryArray){
     let chosenSong = chosenMemory.Title;
     let chosenArtist = chosenMemory.Artist;
     let chosenDesc = chosenMemory.description;
-
+    
     let size = map(chosenVividness,1,5,0,500)
     let growth = map(chosenEnergy,1,5,0.003,0.01)
     let pulse = sin(frame)*size;
@@ -75,6 +128,9 @@ function makeChosenMem(memoryArray){
     let color = map(chosenValence,1,5,0,255);
     let xMap = map(mouseX,0,width,0,100);
     let yMap = map(mouseY,0,height,0,100);
+    
+
+   
 
     if (chosenValence == 1){
         background(xMap,yMap,255);
@@ -87,7 +143,8 @@ function makeChosenMem(memoryArray){
       } else if (chosenValence ==5){
         background(255,xMap,yMap);
       }
-
+    
+    
     textSize(60);
     fill(255,255,255,30);
     text(chosenDesc,20,70,width-40,600);
@@ -116,6 +173,9 @@ function makeChosenMem(memoryArray){
     text(chosenArtist,20,50);
     text(index+1 + " of " + str(memoryArray.length),20,70);
     pop();
+    
+    
+    
 
     frame = frame + growth;
   
@@ -123,6 +183,8 @@ function makeChosenMem(memoryArray){
 }
 
 function draw(){
+    background(220);
+    
     if (curmemtype == 0){
         memarray = selmemories;
 
@@ -131,15 +193,13 @@ function draw(){
     }
 
     makeChosenMem(memarray);
-
-    // makeBubbles();
-
-}
-
-function makeBubbles(){
-  
-        ellipse(random(0,width),random(0,height),random(30,100));
+      // for (let symbol of mySymbols){
+      //   symbol.display();
+      // }
     
+ 
+   
+    // frame++;
     
 }
 
