@@ -1,193 +1,248 @@
-let memories;
-let cued;
+let selmemories;
+let memarray;
 let index = 0;
 let frame = 0;
-let playMode = 'sustain';
-let song;
+let curmemtype = 0;
 let button;
+let carX = 100;
+let cnv;
+let textToType = "Hello, world! This is a typewriter effect in p5.js";
+let typedText = "";
+let textindex = 0;
+let typingSpeed = 1;
 
+
+function centerCanvas() {
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
+  cnv.position(x, y);
+}
+
+class symbol{
+    constructor(_x, _y, diam, colour) {
+        this.xPos = _x;
+        this.yPos = _y;
+        this.size = diam;
+        this.backgroundColour = colour;
+        this.xMotion = random(-3,3);
+        this.yMotion = random(-3,3);
+      }
+
+      display() {    
+        push();
+        strokeWeight(this.size*0.03);
+        stroke(this.backgroundColour);
+          translate(this.xPos,this.yPos);
+          fill(this.backgroundColour);
+          arc(0,0,this.size, this.size,0,PI);
+          fill(0,0);
+          arc(0,0,this.size, this.size,PI,0);
+        pop();
+      
+        if ((this.xPos > width) || (this.xPos < 0)) {
+          this.xMotion = this.xMotion * -1;
+        }
+        if ((this.yPos > height) || (this.yPos < 0)) {
+          this.yMotion = this.yMotion * -1; 
+        
+        }
+      this.xPos += this.xMotion;
+      this.yPos += this.yMotion;
+      }  
+    
+    }
+let mySymbols = [];
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  background(0);
-  soundFormats('wav');
-  song = loadSound('sound/Cut_2011_1.wav');
- 
-  let buttonColor = color(255);
-  
-  // button = createButton('Explore Memories');
-  // button.style('background-color',buttonColor);
-  // button.style('border', 'none');
-  // button.style('text-align','center');
-  // button.style('font-size','16px');
-  // button.style('border-radius','4px');
-  // button.position(width/2 - 70,height/2 - 10);
-  // button.mousePressed();
-
-  //chosen memories setting up, getting memories
-  fetch("./json/memories.json").then(function(response) {
-    return response.json();
-  }).then(function(data) {
-
-    console.log(data);
-    memories = data.memories;
+  cnv = createCanvas(windowWidth,windowHeight);
+  centerCanvas();
+    fetch("./json/selectedmems.json").then(function(response) {
+        return response.json();
+      }).then(function(data) {
     
-  }).catch(function(err) {
-    console.log(`Something went wrong: ${err}`);
-  });
-
-  fetch("./json/cued.json").then(function(response) {
-    return response.json();
-  }).then(function(data) {
-
-    console.log(data);
-    cued = data.cued;
+        console.log(data);
+        selmemories = data.selectedmemories;
+        
+      }).catch(function(err) {
+        console.log(`Something went wrong: ${err}`);
+      });
+      
     
-  }).catch(function(err) {
-    console.log(`Something went wrong: ${err}`);
-  });
 
-}
-
-
-function draw() {
-
-  let xMap = map(mouseX,0,width,0,100);
-  let yMap = map(mouseY,0,height,0,100);
-
-  let temporarymemory = memories[index];
-  let tmenergy = temporarymemory.energy;
-  let tmvividness = temporarymemory.vivid;
-  let tmsong = temporarymemory.songname;
-  let tmartist = temporarymemory.artist;
-  let tmmemory = temporarymemory.description;
-  let size = map(tmvividness,1,5,0,400);
-  let increment = map(tmenergy,1,5,0.003,0.01);
+        // button = createButton('Random Memory');
+        // button.mousePressed(randomMem);
+        // button.position(windowWidth/48,height*12/24);
+        // button.style('background-color', '#000000');
+        // button.style('padding','16px 16px');
+        // button.style('border', 'none');
+        // button.style('text-align','center');
+        // button.style('font-size','16px');
+        // button.style('border-radius','2px');
 
 
-  let tmvalence = temporarymemory.valence;
-  let color;
-  color = map(tmvalence,1,5,0,255);
 
-  if (tmvalence == 1){
-    background(xMap,yMap,255);
-  } else if (tmvalence == 2){
-    background(xMap,yMap,200);
-  } else if (tmvalence ==3) {
-    background(xMap,yMap,50);
-  } else if (tmvalence ==4){
-    background(200,xMap,yMap)
-  } else if (tmvalence ==5){
-    background(255,xMap,yMap);
+        for (let i=0; i<10; i++) {
+            mySymbols.push(new symbol(random(0,width),random(0,height),random(30,100),color(Math.round(random()))));
+          }
+      
+          
   }
 
-
-  
-  
-  
-// making a change if word 'love' is detected in memory description
-// let love = 'love';
-// let m = match(tmmemory,love);  
-// if (m == 'love'){
-  //   background(240,20,90);
-  // } else {
-  //   background(100,83,210,200);
-  // }
-
-  textSize(60);
-  fill(255,255,255,40);
-  text(tmmemory,20,70,width-40,600);
-  
-  if (tmvalence <=3){
-
-    stroke(xMap,yMap,200);
-  } else {
-  
-    stroke(200,xMap,yMap);
+  function randomMem(){
+    index = Math.round(random(0,selmemories.length));
   }
+
+function makeChosenMem(memoryArray){
   
+    let chosenMemory = memoryArray[index];
+    let chosenVividness = chosenMemory.vivid;
+    let chosenEnergy = chosenMemory.memenergy;
+    let chosenValence = chosenMemory.memvalence;
+    let chosenSong = chosenMemory.Title;
+    let chosenArtist = chosenMemory.Artist;
+    let chosenDesc = chosenMemory.description;
+    let person = 'friend';
+    let checkPerson = match(chosenDesc,person);
 
-  translate(width/2,height/2);
 
+    let size = map(chosenVividness,1,5,0,300)
+    let growth = map(chosenEnergy,1,5,0.005,0.015)
+    let pulse = sin(frame)*size;
 
-  fill(255,150);
-  strokeWeight(20);
-  pulse = sin(frame)*size;
-  ellipse(0,0,pulse,pulse);
-  noStroke();
+    let color = map(chosenValence,1,5,0,255);
+    let xMap = map(mouseX,0,width,0,100);
+    let yMap = map(mouseY,0,height,0,100);
+    
+
+   
+
+    if (chosenValence == 1){
+        background(xMap,yMap,255);
+      } else if (chosenValence == 2){
+        background(xMap,yMap,200);
+      } else if (chosenValence ==3) {
+        background(xMap,yMap,50);
+      } else if (chosenValence ==4){
+        background(200,xMap,yMap)
+      } else if (chosenValence ==5){
+        background(255,xMap,yMap);
+      }
+    
+    
+    textSize(40);
+    fill(255,255,255,100);
+    text(chosenDesc,200,90,width-200,600);
+    // fill(255,255,255,255);
+    // text(typedText, 200,90,width-200,600);
+    // if (textindex < chosenDesc.length) {
+    //   // Add the next character to the typed text
+    //   if (pauseCounter === 0 && chosenDesc.charAt(textindex) !== '.') {
+    //     typedText += chosenDesc.charAt(textindex);
+    //   }
+    //   index += typingSpeed;
+      
+    //   // Check if the current character is a period
+    //   if (chosenDesc.charAt(textindex - 1) === '.') {
+    //     pauseCounter = pauseDuration;
+    //   }
+    // }
+    
+    // Pause after encountering a period
+    // if (pauseCounter > 0) {
+    //   pauseCounter--;
+    // }
+
+    // if (textindex < chosenDesc.length) {
+    //   // Add the next character to the typed text
+    //   typedText += chosenDesc.charAt(textindex);
+    //   textindex += typingSpeed;
+    // }
+    
+    push();
+        translate(width/2,height/2);
+        rotate(frame*5);
+        makeSymbol(0,0,90,90);
+    pop();
+
+    push();
+        fill(255,100);
+        noStroke();
+        translate(width/2,height/2);
+        ellipse(0,0,100+ abs(pulse),100+ abs(pulse));
+        translate(-width/2,-height/2);
+        ellipse(mouseX,mouseY,40,40);
+    pop();
+    
+    push();
+    textSize(20);
+    fill(255);
+    text(chosenSong,200,30);
+    textSize(16);
+    fill(255,255,255,100);
+    text(chosenArtist,200,50);
+    text(index+1 + " of " + str(memoryArray.length),200,70);
+    pop();
+    
+    
+    if (checkPerson == 'friend'){
+      for (let symbol of mySymbols){
+        symbol.display();
+      }
+    } 
+    
+    // if (checkCar == 'car'){
+    //   theCar.display();
+    // } 
+
+    frame = frame + growth;
   
-  push();
-  rotate(frame*5);
-  makeSymbol(0,0,100,100);
-  pop();
-  
- translate(-width/2,-height/2);
- textSize(20);
- fill(255);
- text(tmsong,20,30);
- textSize(16);
- fill(255,255,255,100);
- text(tmartist,20,50);
- text(index+1 + " of " + str(memories.length),20,70);
-
-
-
-  frame = frame + increment;
-  
-  push();
-  makeSymbol(mouseX,mouseY,50,50);
-  pop();
-
+    
 }
 
-function makeSymbol(xPosition,yPosition,sizeX,sizeY){
-  push();
-  fill(255);
-  strokeWeight(5);
-  stroke(255);
-  arc(xPosition,yPosition,sizeX,sizeY,0,PI);
-  fill(0,0);
-  arc(xPosition,yPosition,sizeX,sizeY,PI,0);
-  pop();
+function draw(){
+    background(220);
+    memarray = selmemories;
+    makeChosenMem(memarray);  
+   
 }
 
 function keyPressed(){
 
-  if (index == 0){
-    if (keyCode == RIGHT_ARROW){
-      index++;
-    }
-  } else if (index == memories.length-1){
-    if (keyCode == LEFT_ARROW){
-      index--;
-    }
-  } else {
-    if (keyCode == RIGHT_ARROW){
-      index++;
+    if (index == 0){
+      if (keyCode == RIGHT_ARROW){
+        index++;
+      }
+    } else if (index == memarray.length-1){
+      if (keyCode == LEFT_ARROW){
+        index--;
+      }
     } else {
-    if (keyCode == LEFT_ARROW){
-      index--;
+      if (keyCode == RIGHT_ARROW){
+        index++;
+      } else {
+      if (keyCode == LEFT_ARROW){
+        index--;
+      }
+      }
     }
-    }
+   
+  
   }
- 
 
+  function makeSymbol(xPosition,yPosition,sizeX,sizeY){
+    push();
+    fill(255);
+    strokeWeight(3);
+    stroke(255);
+    arc(xPosition,yPosition,sizeX,sizeY,0,PI);
+    fill(0,0);
+    arc(xPosition,yPosition,sizeX,sizeY,PI,0);
+    pop();
+  }
+
+
+
+function windowResized(){
+  centerCanvas();
 }
-
-function windowResized() {
-
-  resizeCanvas(windowWidth, windowHeight);
-
-}
-
-function mousePressed(){
-  makeSymbol(mouseX,mouseY+100, 45, 45);
-  // text("test",mouseX,mouseY);
-  // ellipse(mouseX,mouseY,50,50);
-  // song.play();
-}
-
-
-
-

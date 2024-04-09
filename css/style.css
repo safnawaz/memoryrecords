@@ -36,3 +36,12 @@ button {
   transition: opacity .2s;
 }
 
+body {
+  margin: 0;
+  overflow: hidden;
+}
+.circle {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+}
