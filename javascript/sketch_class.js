@@ -365,9 +365,9 @@ class Memory {
       }
       
 
-      push();
-      drawSoundWave(width / 2, height * 7/8, 50, 0.5,.02, this.noise);
-      pop();
+      // push();
+      // drawSoundWave(width / 2, height * 7/8, 50, 0.5,.02, this.noise);
+      // pop();
       
       phase += map(this.arousal,1,5,0.01,0.03);
       noiseOffset += this.noiseOffset;
