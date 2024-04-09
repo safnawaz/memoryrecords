@@ -606,31 +606,31 @@ function filterMemories(keyword){
   function draw() {
     
 
-    // if (isNegMem) {
-    //   if (index < negativeMemories.length) {
-    //     negativeMemories[index].update();
-    //     negativeMemories[index].display();
-    //   }
-    // } else if(isPosMem) {
-    //   if (index < positiveMemories.length) {
-    //     positiveMemories[index].update();
-    //     positiveMemories[index].display();
-    //   }
-    // } else if(isFiltered){
-    //   filteredMemories[index].update();
-    //   filteredMemories[index].display();
-    // }
+    if (isNegMem) {
+      if (index < negativeMemories.length) {
+        negativeMemories[index].update();
+        negativeMemories[index].display();
+      }
+    } else if(isPosMem) {
+      if (index < positiveMemories.length) {
+        positiveMemories[index].update();
+        positiveMemories[index].display();
+      }
+    } else if(isFiltered){
+      filteredMemories[index].update();
+      filteredMemories[index].display();
+    }
     
-    // else {
-    //   allmemories[index].update();
-    //   allmemories[index].display();
-    // }
+    else {
+      allmemories[index].update();
+      allmemories[index].display();
+    }
     
-    // text(test,width * 2/20, height* 2/20);
+    text(test,width * 2/20, height* 2/20);
 
-    // if (index < allvinyls.length){
-    // allvinyls[index].display();
-    // }
+    if (index < allvinyls.length){
+    allvinyls[index].display();
+    }
 
   
   }
