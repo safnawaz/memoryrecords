@@ -365,9 +365,9 @@ class Memory {
       }
       
 
-      // push();
-      // drawSoundWave(width / 2, height * 7/8, 50, 0.5,.02, this.noise);
-      // pop();
+      push();
+      drawSoundWave(width / 2, height * 7/8, 50, 0.5,.02, this.noise);
+      pop();
       
       phase += map(this.arousal,1,5,0.01,0.03);
       noiseOffset += this.noiseOffset;
@@ -606,25 +606,25 @@ function filterMemories(keyword){
   function draw() {
     
 
-    if (isNegMem) {
-      if (index < negativeMemories.length) {
-        negativeMemories[index].update();
-        negativeMemories[index].display();
-      }
-    } else if(isPosMem) {
-      if (index < positiveMemories.length) {
-        positiveMemories[index].update();
-        positiveMemories[index].display();
-      }
-    } else if(isFiltered){
-      filteredMemories[index].update();
-      filteredMemories[index].display();
-    }
+    // if (isNegMem) {
+    //   if (index < negativeMemories.length) {
+    //     negativeMemories[index].update();
+    //     negativeMemories[index].display();
+    //   }
+    // } else if(isPosMem) {
+    //   if (index < positiveMemories.length) {
+    //     positiveMemories[index].update();
+    //     positiveMemories[index].display();
+    //   }
+    // } else if(isFiltered){
+    //   filteredMemories[index].update();
+    //   filteredMemories[index].display();
+    // }
     
-    else {
-      allmemories[index].update();
-      allmemories[index].display();
-    }
+    // else {
+    //   allmemories[index].update();
+    //   allmemories[index].display();
+    // }
     
     text(test,width * 2/20, height* 2/20);
 
