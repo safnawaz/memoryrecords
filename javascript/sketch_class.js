@@ -628,14 +628,11 @@ function filterMemories(keyword){
     
     text(test,width * 2/20, height* 2/20);
 
-    // if (index < allvinyls.length){
-    // allvinyls[index].display();
-    // }
+    if (index < allvinyls.length){
+    allvinyls[index].display();
+    }
 
-    // else if (isFiltered){
-    //   filteredMemories[index].update();
-    //   filteredMemories[index].display();
-    // }
+  
   }
 
 
