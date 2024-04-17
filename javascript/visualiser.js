@@ -19,6 +19,55 @@ let curmemarray;
 let myInput;
 let search;
 let test;
+let testGuy;
+
+class guy {
+  constructor(_x,_y,size,which){
+    this.xPos = _x;
+    this.yPos = _y;
+    this.startYPos = _y;
+    this.size = size;
+    this.xMovement = 1;
+    this.yMovement = 0.5;
+    this.freq = random(0.1,0.2);
+    this.amp = random(0.2,2);
+
+    if(which < .5){
+      this.guyfacing = socialguy1;
+    } else if(which >= .5 ){
+      this.guyfacing = socialguy2;
+    }
+    
+  }
+
+  display(){
+    push();
+    // translate(centerX,centerY);
+    // scale(-1,1);
+    image(this.guyfacing,this.xPos,this.yPos,this.size, this.size);
+    pop();
+  }
+
+  update(){
+    if (this.guyfacing == socialguy1){
+      if (this.xPos >=  this.size + width){
+        this.xPos = 0 - this.size;
+      } else {
+        this.xPos += this.xMovement;
+      }
+        
+    } else if (this.guyfacing == socialguy2){
+      if (this.xPos <= 0 - this.size){
+        this.xPos = width;
+      } else {
+        this.xPos -= this.xMovement;
+      }
+
+    }
+    this.yPos = this.startYPos + sin(frameCount * this.freq) * this.amp; // Adjust the amplitude and frequency as needed
+
+  }
+}
 
 class heart {
   constructor(_x,_y,speed,size){
@@ -212,6 +261,7 @@ class Memory {
     constructor(track_id, description, vivid, memvalence, memenergy,unique, important,social,emo) {
       this.song = track_id;
       this.description = description;
+      this.descLength = textWidth(this.description);
       this.vividness = vivid;
       this.valence = memvalence;
       this.arousal = memenergy;
@@ -220,8 +270,21 @@ class Memory {
       this.socialcontent = social;
       this.emotions = emo;
       this.numGrooves = map(this.vividness, 1, 7, 0.4, 0.1);
-      this.vinyl = new VinylRecord(width * 1/10,height/2,100,this.numGrooves,color(random(0,255),random(0,255),random(0,255)));
-          
+     
+      if (this.valence == 1){
+        this.labelColor = color(78 ,139,212);
+      } else if (this.valence == 2){
+        this.labelColor = color(152,187,230);
+      } else if (this.valence ==3) {
+        this.labelColor = color(163,214,158);
+      } else if (this.valence ==4){
+        this.labelColor = color(237,145,145)
+      } else if (this.valence ==5){
+        this.labelColor = color(224,66,66);
+      } 
+      
+      this.vinyl = new VinylRecord(width * 1/10,height/2,100,this.numGrooves,this.labelColor);
+      
 
       // admiration,adoration,amusement,calmness, joy, nostalgia,anger,awkwardness,fear, excitement,pride,sadness,surprise
       // this.admiration = admiration;
@@ -242,7 +305,7 @@ class Memory {
       this.checksun = this.description.includes('summer') || this.description.includes('sun');
       this.checknight = this.description.includes('night') || this.description.includes('star ')|| this.description.includes('stars ') || this.description.includes('starry ') ;
       this.checkrain = this.description.includes(' rain');
-      this.checkfriends = this.description.includes(' friend ');
+      this.checkfriends = this.description.includes('friend');
       this.checklove = this.description.includes('boyfriend') || this.description.includes('girlfriend')||this.description.includes('love');
       
       this.myStars = [];
@@ -254,6 +317,24 @@ class Memory {
       this.myConfetti = [];
       this.numConfetti = 100;
       this.swirlSpeed = .002;
+      if (this.socialcontent == 1){
+        this.numGuys = 0;
+      } else if (this.socialcontent == 2){
+        this.numGuys = 5;
+      }
+      else if (this.socialcontent == 3){
+        this.numGuys = 15;
+      }
+      else if (this.socialcontent == 4){
+        this.numGuys = 30;
+      }
+      else {
+        this.numGuys = 50;
+      }
+      
+      // this.numGuys = 20;
+      // this.numGuys = map(this.socialcontent,1,5,1,5);
+      this.myGuys = [];
 
       for (let i=0; i<30; i++) {
        this.myStars.push(new stars(random(0,width),random(0,height),random(10,30)));
@@ -264,7 +345,7 @@ class Memory {
       }
 
       for (let i=0; i<10; i++) {
-        this.myFriends.push(new symbol(random(0,width),random(0,height),random(30,100),color(random(0,255),random(0,255),random(0,255))));
+        this.myFriends.push(new symbol(random(0,width),random(0,height),random(30,100),colorSelect()));
       }      
 
       for (let i = 0; i < this.numConfetti; i++) {
@@ -274,6 +355,12 @@ class Memory {
       for (let i = 0; i < 30; i++){
         this.myHearts.push(new heart(random(0,width),random(0,height),random(-0.5,-3),random(30,150)));
       }
+
+      for (let i =0; i < this.numGuys; i++){
+        this.myGuys.push(new guy(random(0,width),height * 8/10, random(40,150),random(0,1)));
+      }
+
+      
     
       this.sun = new sun();
       
@@ -316,9 +403,7 @@ class Memory {
       // }
       // pop();
     
-    
-
-    //displaying the memory description, it fades in slowly
+  
     if (this.checkfriends == true){
       for (let friend of this.myFriends){
         friend.display();
@@ -327,11 +412,15 @@ class Memory {
     }
     
       push();
-            textSize(32);
+        noStroke();    
+        fill(238,238,238);
+            
+            rect(width * 2/10 - 10, height * 3/10 - 10, 1000, 300, 10);
+            textSize(28);
             if (textOpacity < 255){
             textOpacity += 0.25;
             }
-            fill(255,textOpacity);
+            fill(38,38,38,textOpacity);
             // textAlign(CENTER);
             text(this.description,width * 2/10,height * 3/10,width-350,800);
         
@@ -360,41 +449,39 @@ class Memory {
           heart.update();
           heart.display();
         }
-
-      
       }
-      
 
       push();
-      drawSoundWave(width / 2, height * 7/8, 50, 0.5,.02, this.noise);
+      drawSoundWave(width / 2, height * 6/8, 50, 0.5,.02, this.noise);
       pop();
       
       phase += map(this.arousal,1,5,0.01,0.03);
       noiseOffset += this.noiseOffset;
       
-     
+      for (let guy of this.myGuys){
+        guy.update();
+        guy.display();
+      }
     }
 
     update(){
-      this.xMap = map(mouseX,0,width,0,100);
-      this.yMap = map(mouseY,0,height,0,100);
+      this.xMap = map(mouseX,0,width,0,20);
+      this.yMap = map(mouseY,0,height,0,20);
 
       if (this.valence == 1){
-        this.color = color(this.xMap,this.yMap,255);
+        this.color = color(78 + this.xMap,139 + this.yMap,212);
       } else if (this.valence == 2){
-        this.color = color(this.xMap,this.yMap,200);
+        this.color = color(152 + this.xMap,187 +this.yMap,230);
       } else if (this.valence ==3) {
-        this.color = color(this.xMap,this.yMap,50);
+        this.color = color(163 + this.xMap,214 + this.yMap,158);
       } else if (this.valence ==4){
-        this.color = color(200,this.xMap,this.yMap)
+        this.color = color(237,145 + this.xMap,145 + this.yMap)
       } else if (this.valence ==5){
-        this.color = color(255,this.xMap,this.yMap);
+        this.color = color(224,66 + this.xMap,66 +this.yMap);
       } 
 
-      
     }
 
-    
  
   }
 
@@ -454,7 +541,17 @@ class symbol{
     
     }
 
-  
+function colorSelect(){
+      let myred = color(224, 66, 66);
+      let myorange = color(236, 144, 16);
+      let mygreen = color(103, 188, 95);
+      let myblue = color(78, 139, 212)  ;
+      let myColors = [];
+      myColors.push(myred,myorange,mygreen,myblue);
+      return myColors[Math.floor(Math.random() * myColors.length)]
+    
+    }
+
 function centerCanvas() {
     var x = (windowWidth - width) / 2;
     var y = (windowHeight - height) / 2;
@@ -468,7 +565,9 @@ function windowResized(){
 
 function preload(){
     memoriesData = loadJSON("./json/selectedmems.json");
-    drawnheart = loadImage('./images/heart.png')
+    drawnheart = loadImage('./images/heart.png');
+    socialguy1 = loadImage('./images/guy1.png');
+    socialguy2 = loadImage('./images/guy2.png');
   }
 
 function getRandomIndex(array) {
@@ -572,6 +671,8 @@ function setup() {
     for (let i = 0; i < allmemories.length; i++){
       allvinyls.push(new VinylRecord(100,100,100,allmemories[i].numGrooves,allmemories[i].color));
     }
+
+     testGuy = new guy(width/2,height/2,100,random(0,1));
 }
 
 function searchMemories(){
@@ -604,8 +705,7 @@ function filterMemories(keyword){
 
 
   function draw() {
-    
-
+    background(255,0,0);
     if (isNegMem) {
       if (index < negativeMemories.length) {
         negativeMemories[index].update();
@@ -632,6 +732,7 @@ function filterMemories(keyword){
     // allvinyls[index].display();
     // }
 
+    // testGuy.display();
   
   }
 
