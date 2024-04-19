@@ -3,11 +3,13 @@ let myVinyls = [];
 // let numVinyls = 50;
 let hueAngle = 210;
 let avinyl;
+let interactivity = true;
 
 let myColors = [];
 let currentColorIndex = 0; 
 let canvasWidth;
 let canvasHeight;
+let submit;
 
 let rings = 32;
 let dim_init = 40;
@@ -45,81 +47,6 @@ function centerCanvas() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-class Vinyl {
-  constructor(x_,y_,labelcolor) {
-    if(sorted == false){
-      this.x = random(0,width);
-      this.y = random(0,height);
-    } else if (sorted == true){
-      this.x = x_;
-      this.y = y_;
-    }
-    this.radius = 100;
-    this.numGrooves = random(0.4,0.1);
-    this.label = labelcolor;
-    this.maxSpeed = 5; // Maximum speed the record can move
-  }
-
-  display() {
-    // Draw rotating record
-        push();
-            translate(this.x, this.y);
-            noStroke();
-            fill(28,28,28);
-            ellipse(0, 0, this.radius * 2);
-        pop();
-  
-    //shadow effect
-    push();
-    noStroke();
-    fill(0,50);
-    ellipse(this.x,this.y + 1,this.radius * 2 );
-  
-    //makes lines for grooves
-    for (let i = 1; i < 2; i+= this.numGrooves ){
-      push();
-      stroke(70);
-      noFill();
-      ellipse(this.x,this.y,this.radius * i )
-    }
-  
-      fill(80);
-      ellipse(this.x,this.y, this.radius * 0.8)
-      fill(this.label);
-      ellipse(this.x,this.y, this.radius * 0.7)
-    push();
-        stroke(0);
-        strokeWeight(0.1);
-        noFill(0);
-        ellipse(this.x,this.y, this.radius * 0.25);
-        fill(0);
-        noStroke();
-      ellipse(this.x,this.y, this.radius * 0.1)
-    pop();
-      //here I may want to upload png of 'memory records' with logo/styling
-    }
-
-    update() {
-      // Calculate distance between record and mouse cursor
-      let d = dist(this.x, this.y, mouseX, mouseY);
-  
-      // If mouse is close, move the record
-      if (d < 100) {
-          // Calculate force direction based on record position relative to mouse cursor
-          let angle = atan2(this.y - mouseY, this.x - mouseX);
-          let dx = cos(angle) * this.maxSpeed * (100 / d); // Adjust speed based on distance
-          let dy = sin(angle) * this.maxSpeed * (100 / d);
-  
-          // Update record position
-          this.x += dx;
-          this.y += dy;
-      }
-
-    }
-    
-
-}
-
 
 function setup() {
     cnv = createCanvas(windowWidth, windowHeight);
@@ -136,6 +63,10 @@ function setup() {
     ox = random(10000);
     oy = random(10000);
     oz = random(10000);
+
+    submit = createButton('submit memory');    
+    submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 18/20);
+    submit.style('background-color', '#262626');
     }
   
     
@@ -150,7 +81,8 @@ function setup() {
     noFill();
     textAlign(CENTER);
     textSize(110);
-    text("MEMORY RECORDS",width/2,height/2);
+    textFont('Chillax');
+    text("memory records",width/2,height/2);
     pop();
 
     wiggleRecord();
@@ -158,12 +90,12 @@ function setup() {
     push();
     stroke(238,238,238);
     strokeWeight(2);
-    noFill();
+    fill(238,238,238,50);
     textAlign(CENTER);
+    textFont('Chillax');
     textSize(110);
-    text("MEMORY RECORDS",width/2,height/2);
-    pop();
-     
+    text("memory records",width/2,height/2);
+    pop(); 
   }
 
   function wiggleRecord(){
@@ -171,29 +103,15 @@ function setup() {
     oy-=0.02;
     oz+=0.01;
     push();
-    if (mouseY >= 0 && mouseY <= canvasHeight / 6) {
-      // Map mouseX in the first region (0 - height/4)
-      rings = map(mouseY,0, canvasWidth/8,10,32);
-      // Use the mapped value
-      // ...
-  } else if (mouseY >= canvasHeight * 5/6 && mouseY <= canvasHeight) {
-      // Map mouseX in the second region (height*3/4 - height)
-      rings = map(mouseY,canvasWidth * 7/8, canvasWidth, 32, 10);
-      // Use the mapped value
-      // ...
-  }
 
-  if (mouseX >= 0 && mouseX <= canvasWidth/8){
-    
-    chaos_mag = map(mouseX, 0, canvasHeight/6, 0,30);
-  } else if (mouseX >= canvasWidth * 7/8 && mouseX <= canvasWidth){
-    
-    chaos_mag = map(mouseX, canvasHeight  * 5/6, canvasHeight, 30,50);
-  }
+    if (interactivity){
+      chaos_mag = map(mouseX, 0, canvasWidth, -200,200);
+      chaos_delta = map(mouseY,0,canvasHeight,0.00,0.25);
+    } else {
+      chaos_mag = 30;
+    }
 
-
-    // rings = map(mouseY, 0,height/4, 10,32);
-    // chaos_mag = map(mouseX, width/2 - width/4, width/2 + width/4, 40,100);
+ 
     translate(width/2,height/2);
     noFill();
     strokeWeight(3);
@@ -221,4 +139,17 @@ function setup() {
     if(r < 0.0){r += TWO_PI;}
     return noise(ox + cos(r) * dim , oy + sin(r) * dim, oz + time);
   }
+
+  function keyPressed(){
+    if (keyCode == 32){
+      interactivity = !interactivity;
+    }
+
+    if (keyCode == RIGHT_ARROW){
+      
+    }
+  }
+
+
+
      

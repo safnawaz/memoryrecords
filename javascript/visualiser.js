@@ -1,5 +1,14 @@
 let positiveMemories = [];
 let negativeMemories = [];
+let val1 = [];
+let val2 = [];
+let val3 = [];
+let val4 = [];
+let val5 = [];
+let valslider;
+let sliderFilter = [];
+let isSliderFilter = false;
+
 let filteredMemories = [];
 let uniquememories = [];
 let vividmemories = [];
@@ -19,15 +28,14 @@ let curmemarray;
 let myInput;
 let search;
 let test;
-let testGuy;
 
 class guy {
-  constructor(_x,_y,size,which){
+  constructor(_x,_y,size,which,speed){
     this.xPos = _x;
     this.yPos = _y;
     this.startYPos = _y;
     this.size = size;
-    this.xMovement = 1;
+    this.xMovement = speed;
     this.yMovement = 0.5;
     this.freq = random(0.1,0.2);
     this.amp = random(0.2,2);
@@ -49,14 +57,14 @@ class guy {
   }
 
   update(){
-    if (this.guyfacing == socialguy1){
+    if (this.guyfacing == socialguy2){
       if (this.xPos >=  this.size + width){
         this.xPos = 0 - this.size;
       } else {
         this.xPos += this.xMovement;
       }
         
-    } else if (this.guyfacing == socialguy2){
+    } else if (this.guyfacing == socialguy1){
       if (this.xPos <= 0 - this.size){
         this.xPos = width;
       } else {
@@ -283,7 +291,7 @@ class Memory {
         this.labelColor = color(224,66,66);
       } 
       
-      this.vinyl = new VinylRecord(width * 1/10,height/2,100,this.numGrooves,this.labelColor);
+      this.vinyl = new VinylRecord(width * 1/10,height*3/10,100,this.numGrooves,this.labelColor);
       
 
       // admiration,adoration,amusement,calmness, joy, nostalgia,anger,awkwardness,fear, excitement,pride,sadness,surprise
@@ -317,6 +325,7 @@ class Memory {
       this.myConfetti = [];
       this.numConfetti = 100;
       this.swirlSpeed = .002;
+      
       if (this.socialcontent == 1){
         this.numGuys = 0;
       } else if (this.socialcontent == 2){
@@ -331,6 +340,7 @@ class Memory {
       else {
         this.numGuys = 50;
       }
+      this.guySpeed = map(this.arousal,1,5,0.2,1);
       
       // this.numGuys = 20;
       // this.numGuys = map(this.socialcontent,1,5,1,5);
@@ -357,7 +367,7 @@ class Memory {
       }
 
       for (let i =0; i < this.numGuys; i++){
-        this.myGuys.push(new guy(random(0,width),height * 8/10, random(40,150),random(0,1)));
+        this.myGuys.push(new guy(random(0,width),height * 8/10, random(40,150),random(0,1),this.guySpeed));
       }
 
       
@@ -415,26 +425,26 @@ class Memory {
         noStroke();    
         fill(238,238,238);
             
-            rect(width * 2/10 - 10, height * 3/10 - 10, 1000, 300, 10);
-            textSize(28);
+            rect(width * 2/10 - 10, height * 1/10 - 10, 1000, 300, 10);
+            textSize(24);
             if (textOpacity < 255){
             textOpacity += 0.25;
             }
             fill(38,38,38,textOpacity);
             // textAlign(CENTER);
-            text(this.description,width * 2/10,height * 3/10,width-350,800);
+            text(this.description,width * 2/10,height * 1/10,width-350,800);
         
               textSize(18);
               fill(255);
               textAlign(CENTER);
               
-              text(this.song,width/2,height * 2/10);
+              text(this.song,width * 1/10,height * 5/10);
         pop();
       
         push();
         textSize(12);
         fill(255);
-        text("record " + (index+1) + " of " + curmemarray.length,width * 1/20,height * 2/10);
+        text("record " + (index+1) + " of " + curmemarray.length,width * 1/20,height * 1/10);
         pop(0);
 
         if (this.checkrain == true){ 
@@ -452,7 +462,7 @@ class Memory {
       }
 
       push();
-      drawSoundWave(width / 2, height * 6/8, 50, 0.5,.02, this.noise);
+      drawSoundWave(width / 2, height * 5/8, 50, 0.5,.02, this.noise);
       pop();
       
       phase += map(this.arousal,1,5,0.01,0.03);
@@ -637,6 +647,27 @@ function setup() {
         button.style('font-size','12px');
         button.style('border-radius','2px');
 
+        valslider = createSlider(0, 5, 3, 1);
+        valslider.position(width/2,height/2);
+        valslider.size(80);
+
+        energyslider = createSlider(0, 5, 3, 1);
+        energyslider.position(width/2,height/2 + 40);
+        energyslider.size(80);
+
+        importantslider = createSlider(0, 5, 3, 1);
+        importantslider.position(width/2,height/2 + 80);
+        importantslider.size(80);
+
+        uniqueslider = createSlider(0, 5, 3, 1);
+        uniqueslider.position(width/2,height/2 + 120);
+        uniqueslider.size(80);
+
+        valsearch = createButton("search valence");
+        valsearch.position(width/2 + 80, height/2);
+        valsearch.mousePressed(Filter);
+      
+
     button = createButton('random record');
         button.mousePressed(allMems);
         button.position(width * 1/16,height*14/20);
@@ -647,10 +678,10 @@ function setup() {
         button.style('border-radius','2px');
 
     myInput = createInput();
-    myInput.position(width * 1/20, height * 1/20);
+    myInput.position(width * 1/20, height * 11/20);
 
     search = createButton("search keyword");
-    search.position(myInput.x + myInput.width + 10, height * 1/20);
+    search.position(myInput.height + 10, height * 12/20);
     search.style('background-color','#000000');
     search.mousePressed(searchMemories);
 
@@ -664,6 +695,8 @@ function setup() {
       } else if (mem.valence >=4) {
         positiveMemories.push(mem);
       }
+
+      
       
 
     }
@@ -671,14 +704,73 @@ function setup() {
     for (let i = 0; i < allmemories.length; i++){
       allvinyls.push(new VinylRecord(100,100,100,allmemories[i].numGrooves,allmemories[i].color));
     }
+}
 
-     testGuy = new guy(width/2,height/2,100,random(0,1));
+function Filter(){
+  let prevFilter = sliderFilter;
+  sliderFilter = [];
+  let valrating = valslider.value();
+  let energyrating = energyslider.value();
+  let importantrating = importantslider.value();
+  let uniquerating = uniqueslider.value();
+  isSliderFilter = true;
+  
+
+ filterLikert(valrating,energyrating,importantrating,uniquerating);
+
+  if (sliderFilter.length > 0){
+    curmemarray = sliderFilter;
+    index = 0;
+    test = '';
+  }
+  if (sliderFilter.length == 0){
+    isSliderFilter = false;
+    textSize(48);
+    test = 'no results';
+    // text('no results',width/2, height * 9/10);
+    curmemarray = allmemories;
+    index = 0;
+  }
+
+  // && allmemories[i].importance == importantrating && allmemories[i].uniqueness == uniquerating
+
+}
+
+function filterLikert(valence,arousal,importance,uniqueness){
+  for (let i= 0; i < allmemories.length; i++){
+    if(valence == 0 && arousal == 0 && importance ==0 && uniqueness == 0){
+      sliderFilter = [];
+    } else if (valence == 0 && arousal !== 0 && importance ==0 && uniqueness == 0){
+      if(allmemories[i].arousal == arousal){
+        sliderFilter.push(allmemories[i]);
+      }
+    } else if (valence !== 0 && arousal == 0 && importance == 0 && uniqueness == 0){
+      if(allmemories[i].valence == valence){
+        sliderFilter.push(allmemories[i]);
+      }
+    } else if (valence == 0 && arousal == 0 && importance !== 0 && uniqueness == 0){
+      if(allmemories[i].importance == importance){
+        sliderFilter.push(allmemories[i]);
+      }
+    }else if (valence == 0 && arousal == 0 && importance == 0 && uniqueness !== 0){
+      if(allmemories[i].uniqueness == uniqueness){
+        sliderFilter.push(allmemories[i]);
+      } 
+    }else if (valence !== 0 && arousal !== 0){
+      if(allmemories[i].valence == valence && allmemories[i].arousal == arousal){
+        sliderFilter.push(allmemories[i]);
+      }
+    }
+    
+  }  
 }
 
 function searchMemories(){
+  curmemarray = allmemories;
   filteredMemories = [];
   index = 0;
   isFiltered = true;
+  isSliderFilter = false;
   let keyword = myInput.value();
 
   test = keyword;
@@ -706,33 +798,40 @@ function filterMemories(keyword){
 
   function draw() {
     background(255,0,0);
-    if (isNegMem) {
-      if (index < negativeMemories.length) {
-        negativeMemories[index].update();
-        negativeMemories[index].display();
-      }
-    } else if(isPosMem) {
-      if (index < positiveMemories.length) {
-        positiveMemories[index].update();
-        positiveMemories[index].display();
-      }
-    } else if(isFiltered){
-      filteredMemories[index].update();
-      filteredMemories[index].display();
-    }
+    // if (isNegMem) {
+    //   if (index < negativeMemories.length) {
+    //     negativeMemories[index].update();
+    //     negativeMemories[index].display();
+    //   }
+    // } else if(isPosMem) {
+    //   if (index < positiveMemories.length) {
+    //     positiveMemories[index].update();
+    //     positiveMemories[index].display();
+    //   }
+    // } else if(isFiltered){
+    //   filteredMemories[index].update();
+    //   filteredMemories[index].display();
+    // } 
     
-    else {
-      allmemories[index].update();
-      allmemories[index].display();
-    }
+    // else {
+    //   allmemories[index].update();
+    //   allmemories[index].display();
+    // }
+
+   if (isSliderFilter){
+    sliderFilter[index].update();
+    sliderFilter[index].display();
+   } else {
+    allmemories[index].update();
+    allmemories[index].display();
+   }
+  
     
     text(test,width * 2/20, height* 2/20);
 
     // if (index < allvinyls.length){
     // allvinyls[index].display();
     // }
-
-    // testGuy.display();
   
   }
 

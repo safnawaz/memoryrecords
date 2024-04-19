@@ -45,3 +45,14 @@ body {
   background-color: white;
   border-radius: 50%;
 }
+
+.likert-slider {
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  height: 50px;
+  user-select: none;
+}
