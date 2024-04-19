@@ -3,6 +3,7 @@ let memories = [];
 let gridSize = 10; // Number of rows and columns in the grid
 let gridSpacing = 50; // Spacing between grid elements
 let myVinyls = [];
+let record = false;
 
 let sorted = false;
 let button;
@@ -105,8 +106,12 @@ class Vinyl {
 
 
 function setup() {
-    cnv = createCanvas(windowWidth, windowHeight);
-    centerCanvas();
+  cnv = createCanvas(windowWidth, windowHeight);
+  canvasWidth = width;
+  canvasHeight = height;
+  centerCanvas();
+
+    setInterval(recording, 500);
   
     // for (let i = 0; i<10; i ++){
     //   myVinyls.push(new Vinyl(,colorSelect()));
@@ -131,14 +136,15 @@ function setup() {
       }
     
 
+
       button = createButton(buttontext);
         button.mousePressed(recordSorter);
         button.position(width * 1/16,height*16/20);
-        button.style('background-color', '#1B00FF');
-        button.style('padding','16px 16px');
-        button.style('text-align','center');
-        button.style('font-size','12px');
-        button.style('border-radius','2px');
+        button.style('background-color', '#262626');
+        button.style('padding', '12px 12px');
+        button.style('font-family','Sometype Mono');
+        button.style('border', '2px solid rgb(238,238,238)');
+        button.style('border-radius', '10px');
     }
   
     function recordSorter(){
@@ -165,22 +171,28 @@ function setup() {
       }
     }
     
-   
+  function recording(){
+    record = !record;
+  }
     
   function draw() {
-    background(238,238,238);
+    background('#98BBE6');
 
     push();  
     textAlign(CENTER,CENTER);
     translate(width/2,height/2);
+    
+    if (record){
     noFill();
     strokeWeight(3);
     stroke(255,0,0);
-    ellipse(-190,0,40);
+    ellipse(-210,0,40);
+    }
     fill(255,0,0);
     noStroke();
-    ellipse(-190 ,0,30);
+    ellipse(-210 ,0,30);
     textSize(48);
+    textFont('Chillax');
     fill(38,38,38);
     text("record memory",0,0);
     pop(); 

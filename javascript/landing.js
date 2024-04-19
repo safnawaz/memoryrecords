@@ -67,6 +67,10 @@ function setup() {
     submit = createButton('submit memory');    
     submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 18/20);
     submit.style('background-color', '#262626');
+    submit.style('padding', '10px 10px');
+    submit.style('font-family','Sometype Mono');
+    submit.style('border', '2px solid rgb(238,238,238)');
+    submit.style('border-radius', '10px');
     }
   
     
