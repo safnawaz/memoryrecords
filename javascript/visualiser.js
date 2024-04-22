@@ -1,13 +1,11 @@
-let positiveMemories = [];
-let negativeMemories = [];
-let val1 = [];
-let val2 = [];
-let val3 = [];
-let val4 = [];
-let val5 = [];
+
 let valslider;
+let clear;
 let sliderFilter = [];
 let isSliderFilter = false;
+let filtercheck = '0 0 0 0';
+let prevCurMemArray; // Variable to store the previous curmemarray
+let prevIndex; // Variable to store the previous index
 
 let filteredMemories = [];
 let uniquememories = [];
@@ -25,7 +23,10 @@ let isFiltered = false;
 let phase = 0;
 let noiseOffset = 0;
 let curmemarray;
-let myInput;
+
+let keywordsearch;
+let songsearch;
+
 let search;
 let test;
 
@@ -99,77 +100,142 @@ class heart {
   }
   }
 
-class VinylRecord {
-    constructor(x, y, radius, numGrooves, labelcolor) {
-      this.x = x;
-      this.y = y;
-      this.radius = radius;
-      this.numGrooves = numGrooves;
-      this.label = labelcolor;
-      // this.rotationSpeed = 0.02; // Rotation speed in radians per frame
-      // this.rotationAngle = 0; // Initial rotation angle
-      this.maxSpeed = 5; // Maximum speed the record can move
-    }
-  
-    display() {
+  class VinylRecord {
+  constructor(x, y, radius, numGrooves, labelcolor) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.numGrooves = numGrooves;
+    this.label = labelcolor;
+    this.rotationSpeed = 0.05; // Rotation speed in radians per frame
+    this.rotationAngle = 0; // Initial rotation angle
+    this.maxSpeed = 5; // Maximum speed the record can move
+  }
+
+  display() {
     // Draw rotating record
-        push();
-            translate(this.x, this.y);
-            noStroke();
-            fill(0);
-            ellipse(0, 0, this.radius * 2);
-        pop();
-  
-    //shadow effect
     push();
-      noStroke();
-      fill(0,50);
-      ellipse(this.x,this.y + 1,this.radius * 2 );
+    translate(this.x, this.y);
+    noStroke();
+    fill(0);
+    ellipse(0, 0, this.radius * 2);
     pop();
-    //makes lines for grooves
-    for (let i = 1; i < 2; i+= this.numGrooves ){
+
+    // Shadow effect
+    push();
+    noStroke();
+    fill(0, 50);
+    ellipse(this.x, this.y + 1, this.radius * 2);
+    pop();
+
+    // Makes lines for grooves
+    for (let i = 1; i < 2; i += this.numGrooves) {
       push();
       stroke(70);
       noFill();
-      ellipse(this.x,this.y,this.radius * i );
+      ellipse(this.x, this.y, this.radius * i);
       pop();
     }
+
+    // Arc
     push();
-      fill(80);
-      ellipse(this.x,this.y, this.radius * 0.8)
-      fill(this.label);
-      ellipse(this.x,this.y, this.radius * 0.7)
+    translate(this.x,this.y);
+    rotate(this.rotationAngle);
+    noStroke();
+    fill(238, 50);
+    arc(0,0, this.radius * 2, this.radius * 2, QUARTER_PI, HALF_PI);
     pop();
-      push();
-        stroke(0);
-        strokeWeight(0.1);
-        noFill(0);
-        ellipse(this.x,this.y, this.radius * 0.25);
-        fill(0);
-        noStroke();
-        ellipse(this.x,this.y, this.radius * 0.1)
+
+    // Label
+    push();
+    fill(80);
+    ellipse(this.x, this.y, this.radius * 0.8);
+    fill(this.label);
+    ellipse(this.x, this.y, this.radius * 0.7);
     pop();
-      //here I may want to upload png of 'memory records' with logo/styling
-    }
-  
-  //   update() {
-  //     // Calculate distance between record and mouse cursor
-  //     let d = dist(this.x, this.y, mouseX, mouseY);
-  
-  //     // If mouse is close, move the record
-  //     if (d < 100) {
-  //         // Calculate force direction based on record position relative to mouse cursor
-  //         let angle = atan2(this.y - mouseY, this.x - mouseX);
-  //         let dx = cos(angle) * this.maxSpeed * (100 / d); // Adjust speed based on distance
-  //         let dy = sin(angle) * this.maxSpeed * (100 / d);
-  
-  //         // Update record position
-  //         this.x += dx;
-  //         this.y += dy;
-  //     }
-  // }
-  
+
+    // Central dots
+    push();
+    stroke(0);
+    strokeWeight(0.25);
+    noFill(0);
+    ellipse(this.x, this.y, this.radius * 0.25);
+    fill(0);
+    noStroke();
+    ellipse(this.x, this.y, this.radius * 0.1);
+    pop();
   }
+
+  // Rotate method
+  rotate() {
+    this.rotationAngle += this.rotationSpeed;
+  }
+}
+
+// class VinylRecord {
+//     constructor(x, y, radius, numGrooves, labelcolor) {
+//       this.x = x;
+//       this.y = y;
+//       this.radius = radius;
+//       this.numGrooves = numGrooves;
+//       this.label = labelcolor;
+//       // this.rotationSpeed = 0.02; // Rotation speed in radians per frame
+//       // this.rotationAngle = 0; // Initial rotation angle
+//       this.maxSpeed = 5; // Maximum speed the record can move
+//     }
+  
+//     display() {
+//     // Draw rotating record
+//         push();
+//             translate(this.x, this.y);
+//             noStroke();
+//             fill(0);
+//             ellipse(0, 0, this.radius * 2);
+//         pop();
+  
+//     //shadow effect
+//     push();
+//       noStroke();
+//       fill(0,50);
+//       ellipse(this.x,this.y + 1,this.radius * 2 );
+//     pop();
+//     //makes lines for grooves
+//     for (let i = 1; i < 2; i+= this.numGrooves ){
+//       push();
+//       stroke(70);
+//       noFill();
+//       ellipse(this.x,this.y,this.radius * i );
+//       pop();
+//     }
+//     push();
+//     noStroke();
+//     fill(238,50);
+//     arc(this.x, this.y, this.radius * 2, this.radius * 2 , QUARTER_PI, HALF_PI);
+//     pop();
+
+//     push();
+//       fill(80);
+//       ellipse(this.x,this.y, this.radius * 0.8)
+//       fill(this.label);
+//       ellipse(this.x,this.y, this.radius * 0.7)
+//     pop();
+//       push();
+//         stroke(0);
+//         strokeWeight(0.1);
+//         noFill(0);
+//         ellipse(this.x,this.y, this.radius * 0.25);
+//         fill(0);
+//         noStroke();
+//         ellipse(this.x,this.y, this.radius * 0.1)
+//     pop();
+
+    
+
+//       //here I may want to upload png of 'memory records' with logo/styling
+//     }
+
+  
+//   }
 
 class stars{
     constructor(_x, _y, diam) {
@@ -291,7 +357,7 @@ class Memory {
         this.labelColor = color(224,66,66);
       } 
       
-      this.vinyl = new VinylRecord(width * 1/10,height*3/10,100,this.numGrooves,this.labelColor);
+      this.vinyl = new VinylRecord(width * 1/10,height*7/24,70,this.numGrooves,this.labelColor);
       
 
       // admiration,adoration,amusement,calmness, joy, nostalgia,anger,awkwardness,fear, excitement,pride,sadness,surprise
@@ -387,6 +453,7 @@ class Memory {
         this.sun.update();
     }
       push();
+      this.vinyl.rotate();
       this.vinyl.display();
       pop();
       
@@ -438,14 +505,10 @@ class Memory {
               fill(255);
               textAlign(CENTER);
               
-              text(this.song,width * 1/10,height * 5/10);
+              text(this.song,width * 1/10,height * 7/24);
         pop();
       
-        push();
-        textSize(12);
-        fill(255);
-        text("record " + (index+1) + " of " + curmemarray.length,width * 1/20,height * 1/10);
-        pop(0);
+        
 
         if (this.checkrain == true){ 
           for (let drop of this.drops){
@@ -472,6 +535,12 @@ class Memory {
         guy.update();
         guy.display();
       }
+
+      push();
+        textSize(16);
+        fill(255);
+        text("record " + (index+1) + " of " + curmemarray.length,width * 1/24,height * 1.5/24);
+        pop(0);
     }
 
     update(){
@@ -625,80 +694,92 @@ function drawSoundWave(x, y, amplitude, frequency, speed, noiseStrength) {
   endShape();
 }
 
+function nextMem(){
+  if (index == curmemarray.length - 1){
+    index = index;
+  } else {
+    index++;
+    textOpacity = 100;
+  }
+}
+
+function prevMem(){
+  if (index == 0){
+    index = index;
+  } else {
+    index--;
+    textOpacity = 100;
+  }
+  
+}
+
 function setup() {
   cnv = createCanvas(windowWidth, windowHeight);
   centerCanvas();
   curmemarray = allmemories;
-  button = createButton('sad records');
-        button.mousePressed(negMem);
-        button.position(width * 1/16,height*16/20);
-        button.style('background-color', '#1B00FF');
-        button.style('padding','16px 16px');
-        button.style('text-align','center');
-        button.style('font-size','12px');
-        button.style('border-radius','2px');
+  textFont('Sometype Mono');
+
+  // Initialising navigation buttons, left, right and shuffle
+  let leftbutton = createButton("<");
+  leftbutton.position(width * 1/24, height * 2/24 );
+  leftbutton.mousePressed(prevMem);
+
+  button = createButton('random record');
+  button.mousePressed(allMems);
+  button.position(width * 1.5/24, height * 2/24);
+
+  let rightbutton = createButton(">");
+  rightbutton.position(width * 4/24, height * 2/24 );
+  rightbutton.mousePressed(nextMem);
+
+  // initialising search areas
+  keywordsearch = createInput();
+  keywordsearch.position(width * 1/24, height * 19/24);
+  keywordsearch.attribute('placeholder','search memory keyword');
+
+  search = createButton("search keyword");
+  search.position(keywordsearch.width + search.width/2, height * 19/24);
+  search.mousePressed(searchMemories); 
   
-    button = createButton('happy records');
-        button.mousePressed(posMem);
-        button.position(width * 1/16,height*18/20);
-        button.style('background-color', '#ff3800');
-        button.style('padding','16px 16px');
-        button.style('text-align','center');
-        button.style('font-size','12px');
-        button.style('border-radius','2px');
+  songsearch = createInput();
+  songsearch.position(width * 1/24, height * 17/24);
+  songsearch.attribute('placeholder','search song');
 
-        valslider = createSlider(0, 5, 3, 1);
-        valslider.position(width/2,height/2);
-        valslider.size(80);
+  search = createButton("search song");
+  search.position(songsearch.width + search.width/2, height * 17/24);
+  search.mousePressed(searchMemories); 
 
-        energyslider = createSlider(0, 5, 3, 1);
-        energyslider.position(width/2,height/2 + 40);
-        energyslider.size(80);
+  //Initialising sliders to filter by properties
+  valslider = createSlider(0, 5, 0, 1);
+  valslider.position(width * 1/24, height * 11/24);
+  valslider.size(150);
 
-        importantslider = createSlider(0, 5, 3, 1);
-        importantslider.position(width/2,height/2 + 80);
-        importantslider.size(80);
+  energyslider = createSlider(0, 5, 0, 1);
+  energyslider.position(width * 1/24, height * 12/24);
+  energyslider.size(150);
 
-        uniqueslider = createSlider(0, 5, 3, 1);
-        uniqueslider.position(width/2,height/2 + 120);
-        uniqueslider.size(80);
+  importantslider = createSlider(0, 5, 0, 1);
+  importantslider.position(width * 1/24, height * 13/24);
+  importantslider.size(150);
 
-        valsearch = createButton("search valence");
-        valsearch.position(width/2 + 80, height/2);
-        valsearch.mousePressed(Filter);
-      
+  uniqueslider = createSlider(0, 5, 0, 1);
+  uniqueslider.position(width * 1/24, height * 14/24);
+  uniqueslider.size(150);
 
-    button = createButton('random record');
-        button.mousePressed(allMems);
-        button.position(width * 1/16,height*14/20);
-        button.style('background-color', '#000000');
-        button.style('padding','16px 16px');
-        button.style('text-align','center');
-        button.style('font-size','12px');
-        button.style('border-radius','2px');
-
-    myInput = createInput();
-    myInput.position(width * 1/20, height * 11/20);
-
-    search = createButton("search keyword");
-    search.position(myInput.height + 10, height * 12/20);
-    search.style('background-color','#000000');
-    search.mousePressed(searchMemories);
+  valsearch = createButton("filter");
+  valsearch.position(width * 2/24, height * 15/24);
+  valsearch.mousePressed(Filter);
+  
+  //initialising clear
+  clear = createButton("clear filters");
+  clear.position(width * 1/24, height * 21/24);
+  clear.mousePressed(clearSearch);
 
     for (let i = 0; i < memoriesData.selectedmemories.length; i++) {
       let memData = memoriesData.selectedmemories[i];
       let mem = new Memory(memData.Title, memData.description, memData.vivid, memData.memvalence, memData.memenergy, memData.unique,memData.important,memData.social,memData.emo);
     
       allmemories.push(mem); // Add Memory object to array
-      if (mem.valence <= 2) {
-        negativeMemories.push(mem);
-      } else if (mem.valence >=4) {
-        positiveMemories.push(mem);
-      }
-
-      
-      
-
     }
 
     for (let i = 0; i < allmemories.length; i++){
@@ -706,72 +787,71 @@ function setup() {
     }
 }
 
+function clearSearch(){
+  // isSliderFilter = false;
+  // isFiltered = false;
+  curmemarray = allmemories;
+  index = 0;
+  valslider.value(0);
+  energyslider.value(0);
+  importantslider.value(0);
+  uniqueslider.value(0);
+  keywordsearch.value("");
+  songsearch.value("");
+  filtercheck = "";
+}
+
 function Filter(){
-  let prevFilter = sliderFilter;
+  prevCurMemArray = curmemarray; // Store the current state
+  prevIndex = index;
+
   sliderFilter = [];
   let valrating = valslider.value();
   let energyrating = energyslider.value();
   let importantrating = importantslider.value();
   let uniquerating = uniqueslider.value();
-  isSliderFilter = true;
   
 
  filterLikert(valrating,energyrating,importantrating,uniquerating);
 
-  if (sliderFilter.length > 0){
-    curmemarray = sliderFilter;
-    index = 0;
-    test = '';
-  }
-  if (sliderFilter.length == 0){
-    isSliderFilter = false;
-    textSize(48);
-    test = 'no results';
-    // text('no results',width/2, height * 9/10);
-    curmemarray = allmemories;
-    index = 0;
-  }
-
-  // && allmemories[i].importance == importantrating && allmemories[i].uniqueness == uniquerating
-
+ if (sliderFilter.length > 0) {
+  curmemarray = sliderFilter;
+  index = 0;
+  test = '';
+} else {
+  filtercheck = 'no results';
+  curmemarray = prevCurMemArray; // Restore the previous state
+  index = prevIndex;
+}
 }
 
-function filterLikert(valence,arousal,importance,uniqueness){
-  for (let i= 0; i < allmemories.length; i++){
-    if(valence == 0 && arousal == 0 && importance ==0 && uniqueness == 0){
-      sliderFilter = [];
-    } else if (valence == 0 && arousal !== 0 && importance ==0 && uniqueness == 0){
-      if(allmemories[i].arousal == arousal){
-        sliderFilter.push(allmemories[i]);
-      }
-    } else if (valence !== 0 && arousal == 0 && importance == 0 && uniqueness == 0){
-      if(allmemories[i].valence == valence){
-        sliderFilter.push(allmemories[i]);
-      }
-    } else if (valence == 0 && arousal == 0 && importance !== 0 && uniqueness == 0){
-      if(allmemories[i].importance == importance){
-        sliderFilter.push(allmemories[i]);
-      }
-    }else if (valence == 0 && arousal == 0 && importance == 0 && uniqueness !== 0){
-      if(allmemories[i].uniqueness == uniqueness){
-        sliderFilter.push(allmemories[i]);
-      } 
-    }else if (valence !== 0 && arousal !== 0){
-      if(allmemories[i].valence == valence && allmemories[i].arousal == arousal){
-        sliderFilter.push(allmemories[i]);
-      }
-    }
+function filterLikert(valence, arousal, importance, uniqueness) {
+  sliderFilter = []; // Reset sliderFilter array    
+  for (let i = 0; i < allmemories.length; i++) {
+    let memory = allmemories[i];
     
-  }  
+    // Check conditions for each attribute
+    if ((valence === 0 || memory.valence === valence) &&
+        (arousal === 0 || memory.arousal === arousal) &&
+        (importance === 0 || memory.importance === importance) &&
+        (uniqueness === 0 || memory.uniqueness === uniqueness)) {
+          // sliderFilter = []; // Reset sliderFilter array
+  
+          sliderFilter.push(memory);
+      filtercheck = "valence = " + valence.toString() + " arousal = " + arousal.toString() + 
+      " importance = " + importance.toString() + " uniqueness = " + uniqueness.toString();
+    }
+  }
+  
 }
 
 function searchMemories(){
-  curmemarray = allmemories;
+
   filteredMemories = [];
   index = 0;
   isFiltered = true;
   isSliderFilter = false;
-  let keyword = myInput.value();
+  let keyword = keywordsearch.value();
 
   test = keyword;
   filterMemories(keyword);
@@ -779,7 +859,8 @@ function searchMemories(){
   if (filteredMemories.length > 0){
     curmemarray = filteredMemories;
     index = 0;
-  } else {
+  } 
+  else {
     isFiltered = false;
     curmemarray = allmemories;
     index = 0;
@@ -798,37 +879,26 @@ function filterMemories(keyword){
 
   function draw() {
     background(255,0,0);
-    // if (isNegMem) {
-    //   if (index < negativeMemories.length) {
-    //     negativeMemories[index].update();
-    //     negativeMemories[index].display();
-    //   }
-    // } else if(isPosMem) {
-    //   if (index < positiveMemories.length) {
-    //     positiveMemories[index].update();
-    //     positiveMemories[index].display();
-    //   }
-    // } else if(isFiltered){
-    //   filteredMemories[index].update();
-    //   filteredMemories[index].display();
-    // } 
-    
-    // else {
-    //   allmemories[index].update();
-    //   allmemories[index].display();
-    // }
 
-   if (isSliderFilter){
-    sliderFilter[index].update();
-    sliderFilter[index].display();
-   } else {
-    allmemories[index].update();
-    allmemories[index].display();
-   }
+    curmemarray[index].update();
+    curmemarray[index].display();
   
     
     text(test,width * 2/20, height* 2/20);
 
+    push();
+    fill(238,238,238);
+    text("valence", width * 1/24, height * 11/24);
+    text("arousal", width * 1/24, height * 12/24);
+    text("importance", width * 1/24, height * 13/24);
+    text("uniqueness", width * 1/24, height * 14/24);
+    pop();
+
+    push();
+    fill(38,38,38);
+    stroke(38,38,38);
+    text(filtercheck, width * 1/24, height * 15/24);
+    pop();
     // if (index < allvinyls.length){
     // allvinyls[index].display();
     // }
@@ -846,28 +916,12 @@ function filterMemories(keyword){
       posMem();
     }
     
-    if (index == 0 ){
-      if (keyCode == LEFT_ARROW){
-        index = index;
-      } else if (keyCode == RIGHT_ARROW){
-        index++;
-        textOpacity = 100;
-      }
-    } else if (index == curmemarray.length - 1){
-      if (keyCode == RIGHT_ARROW){
-        index = index;
-      } else if (keyCode == LEFT_ARROW){
-        index--;
-        textOpacity = 100;
-      }
-    } else {
-      if (keyCode == RIGHT_ARROW){
-        index++;
-        textOpacity = 100;
-      } else if (keyCode == LEFT_ARROW){
-        index--;
-        textOpacity = 100;
-      }
+    if (keyCode == LEFT_ARROW){
+      prevMem();
+    }
+
+    if (keyCode == RIGHT_ARROW){
+      nextMem();
     }
     
   }

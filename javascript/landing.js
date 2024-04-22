@@ -81,7 +81,7 @@ function setup() {
   
     push();
     stroke(238,238,238,100);
-    strokeWeight(2);
+    strokeWeight(8);
     noFill();
     textAlign(CENTER);
     textSize(110);
@@ -94,7 +94,7 @@ function setup() {
     push();
     stroke(238,238,238);
     strokeWeight(2);
-    fill(238,238,238,50);
+    fill(238,238,238);
     textAlign(CENTER);
     textFont('Chillax');
     textSize(110);
