@@ -3,7 +3,11 @@ let valslider;
 let clear;
 let sliderFilter = [];
 let isSliderFilter = false;
-let filtercheck = '0 0 0 0';
+let val_value = '0';
+let ener_value = '0';
+let imp_value = '0';
+let uniq_value = '0';
+let filtercheck = '';
 let prevCurMemArray; // Variable to store the previous curmemarray
 let prevIndex; // Variable to store the previous index
 
@@ -741,13 +745,13 @@ function setup() {
   search.position(keywordsearch.width + search.width/2, height * 19/24);
   search.mousePressed(searchMemories); 
   
-  songsearch = createInput();
-  songsearch.position(width * 1/24, height * 17/24);
-  songsearch.attribute('placeholder','search song');
+  // songsearch = createInput();
+  // songsearch.position(width * 1/24, height * 17/24);
+  // songsearch.attribute('placeholder','search song');
 
-  search = createButton("search song");
-  search.position(songsearch.width + search.width/2, height * 17/24);
-  search.mousePressed(searchMemories); 
+  // search = createButton("search song");
+  // search.position(songsearch.width + search.width/2, height * 17/24);
+  // search.mousePressed(searchMemories); 
 
   //Initialising sliders to filter by properties
   valslider = createSlider(0, 5, 0, 1);
@@ -838,8 +842,11 @@ function filterLikert(valence, arousal, importance, uniqueness) {
           // sliderFilter = []; // Reset sliderFilter array
   
           sliderFilter.push(memory);
-      filtercheck = "valence = " + valence.toString() + " arousal = " + arousal.toString() + 
-      " importance = " + importance.toString() + " uniqueness = " + uniqueness.toString();
+      val_value = valence.toString();
+      ener_value = arousal.toString();
+      imp_value =  importance.toString();
+      uniq_value = uniqueness.toString();
+      
     }
   }
   
@@ -897,6 +904,11 @@ function filterMemories(keyword){
     push();
     fill(38,38,38);
     stroke(38,38,38);
+    text(val_value, width * 4/24, height * 11/24);
+    text(ener_value, width * 4/24, height * 12/24);
+    text(imp_value, width * 4/24, height * 13/24);
+    text(uniq_value, width * 4/24, height * 14/24);
+
     text(filtercheck, width * 1/24, height * 15/24);
     pop();
     // if (index < allvinyls.length){
