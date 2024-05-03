@@ -64,13 +64,13 @@ function setup() {
     oy = random(10000);
     oz = random(10000);
 
-    submit = createButton('submit memory');    
-    submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 18/20);
-    submit.style('background-color', '#262626');
-    submit.style('padding', '10px 10px');
-    submit.style('font-family','Sometype Mono');
-    submit.style('border', '2px solid rgb(238,238,238)');
-    submit.style('border-radius', '10px');
+    // submit = createButton('submit memory');    
+    // submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 18/20);
+    // submit.style('background-color', '#262626');
+    // submit.style('padding', '10px 10px');
+    // submit.style('font-family','Sometype Mono');
+    // submit.style('border', '2px solid rgb(238,238,238)');
+    // submit.style('border-radius', '10px');
     }
   
     
@@ -100,6 +100,15 @@ function setup() {
     textSize(110);
     text("memory records",width/2,height/2);
     pop(); 
+
+    push();
+    
+    textAlign(CENTER);
+    fill(255);
+    textSize(16);
+    textFont('Sometype Mono');
+    text("site coming soon...", canvasWidth/2 ,canvasHeight * 18/20);
+    pop();
   }
 
   function wiggleRecord(){
