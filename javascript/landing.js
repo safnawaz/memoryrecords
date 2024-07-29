@@ -6,6 +6,7 @@ let avinyl;
 let interactivity = true;
 
 let myColors = [];
+let mycolorindex;
 let currentColorIndex = 0; 
 let canvasWidth;
 let canvasHeight;
@@ -59,6 +60,7 @@ function setup() {
     let mygreen = color(103, 188, 95);
     let myblue = color(78, 139, 212);
     myColors.push(myred, myorange, mygreen, myblue);
+    mycolorindex = Math.floor(Math.random() * 4);
 
     ox = random(10000);
     oy = random(10000);
@@ -73,7 +75,12 @@ function setup() {
     // submit.style('border-radius', '10px');
     }
   
-    
+  function windowResized(){
+    resizeCanvas(windowWidth,windowHeight);
+    canvasWidth = width;
+    canvasHeight = height;
+    centerCanvas();
+  }
    
     
   function draw() {
@@ -81,10 +88,10 @@ function setup() {
   
     push();
     stroke(238,238,238,100);
-    strokeWeight(8);
+    strokeWeight(canvasWidth * 0.004);
     noFill();
     textAlign(CENTER);
-    textSize(110);
+    textSize(canvasWidth * 0.08);
     textFont('Chillax');
     text("memory records",width/2,height/2);
     pop();
@@ -97,7 +104,7 @@ function setup() {
     fill(238,238,238);
     textAlign(CENTER);
     textFont('Chillax');
-    textSize(110);
+    textSize(canvasWidth * 0.08);
     text("memory records",width/2,height/2);
     pop(); 
 
@@ -105,7 +112,7 @@ function setup() {
     
     textAlign(CENTER);
     fill(255);
-    textSize(16);
+    textSize(canvasWidth * 0.025);
     textFont('Sometype Mono');
     text("site coming soon...", canvasWidth/2 ,canvasHeight * 18/20);
     pop();
@@ -133,8 +140,10 @@ function setup() {
 
     for (let i = 0; i < rings; i ++){
         if (colorCounter % colorChangeInterval === 0) {
-            stroke(colorSelect());
+            // stroke(colorSelect()); commenting out for now, can return back to alternating colours for rings
+            
         }
+        stroke(myColors[mycolorindex]);
         beginShape();
         for(let angle = 0; angle < 360; angle++){
             let radian = radians(angle);
@@ -145,6 +154,13 @@ function setup() {
         
     }
     pop();
+  }
+
+  function touchMoved(){
+  if(interactivity){
+    chaos_mag = map(touchX, 0, canvasWidth, -200,200);
+    chaos_delta = map(touchY, 0, canvasHeight, 0.00,0.25);
+  }
   }
 
   function getNoiseWithTime (radian, dim, time){

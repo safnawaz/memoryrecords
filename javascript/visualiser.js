@@ -675,7 +675,7 @@ function posMem(){
 }
 
 function allMems(){
-  curmemarray = allmemories;
+  // curmemarray = allmemories;
   isPosMem = false;
   isNegMem = false;
   index = getRandomIndex(curmemarray);
