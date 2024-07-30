@@ -11,6 +11,9 @@ let currentColorIndex = 0;
 let canvasWidth;
 let canvasHeight;
 let submit;
+let button;
+let buttonText;
+let buttonOn = false;
 
 let rings = 32;
 let dim_init = 40;
@@ -65,14 +68,17 @@ function setup() {
     ox = random(10000);
     oy = random(10000);
     oz = random(10000);
+    buttonText = "What is Memory Records?";
 
-    // submit = createButton('submit memory');    
-    // submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 18/20);
-    // submit.style('background-color', '#262626');
-    // submit.style('padding', '10px 10px');
-    // submit.style('font-family','Sometype Mono');
-    // submit.style('border', '2px solid rgb(238,238,238)');
-    // submit.style('border-radius', '10px');
+    submit = createButton(buttonText);  
+    submit.mousePressed(textBox);  
+    submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 17/20);
+    submit.style('background-color', '#262626');
+    submit.style('padding', '10px 10px');
+    submit.style('font-family','Sometype Mono');
+    submit.style('border', '2px solid rgb(238,238,238)');
+    submit.style('border-radius', '10px');
+
     }
   
   function windowResized(){
@@ -81,6 +87,14 @@ function setup() {
     canvasHeight = height;
     centerCanvas();
   }
+
+  function textBox(){
+    buttonOn = !buttonOn;
+    // buttonText = buttonOn ? "Back" : "What is Memory Records?";
+    // submit.html(buttonText)
+    
+  }
+
    
     
   function draw() {
@@ -91,12 +105,15 @@ function setup() {
     strokeWeight(canvasWidth * 0.004);
     noFill();
     textAlign(CENTER);
-    textSize(canvasWidth * 0.08);
+    textSize(canvasWidth * 0.10);
     textFont('Chillax');
     text("memory records",width/2,height/2);
     pop();
 
-    wiggleRecord();
+    if (buttonOn){
+      wiggleRecord();
+    }
+    
 
     push();
     stroke(238,238,238);
@@ -104,18 +121,18 @@ function setup() {
     fill(238,238,238);
     textAlign(CENTER);
     textFont('Chillax');
-    textSize(canvasWidth * 0.08);
+    textSize(canvasWidth * 0.10);
     text("memory records",width/2,height/2);
     pop(); 
 
-    push();
+    // push();
     
-    textAlign(CENTER);
-    fill(255);
-    textSize(canvasWidth * 0.025);
-    textFont('Sometype Mono');
-    text("site coming soon...", canvasWidth/2 ,canvasHeight * 18/20);
-    pop();
+    // textAlign(CENTER);
+    // fill(255);
+    // textSize(12 +( canvasWidth * 0.005));
+    // textFont('Sometype Mono');
+    // text("site coming soon...", canvasWidth/2 ,canvasHeight * 18/20);
+    // pop();
   }
 
   function wiggleRecord(){
