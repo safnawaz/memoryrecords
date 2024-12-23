@@ -13,7 +13,7 @@ let canvasHeight;
 let submit;
 let button;
 let buttonText;
-let buttonOn = false;
+let buttonOn = true;
 
 let rings = 32;
 let dim_init = 40;
@@ -70,14 +70,14 @@ function setup() {
     oz = random(10000);
     buttonText = "What is Memory Records?";
 
-    submit = createButton(buttonText);  
-    submit.mousePressed(textBox);  
-    submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 17/20);
-    submit.style('background-color', '#262626');
-    submit.style('padding', '10px 10px');
-    submit.style('font-family','Sometype Mono');
-    submit.style('border', '2px solid rgb(238,238,238)');
-    submit.style('border-radius', '10px');
+    // submit = createButton(buttonText);  
+    // submit.mousePressed(textBox);  
+    // submit.position(canvasWidth/2 - submit.width /2,canvasHeight * 17/20);
+    // submit.style('background-color', '#262626');
+    // submit.style('padding', '10px 10px');
+    // submit.style('font-family','Sometype Mono');
+    // submit.style('border', '2px solid rgb(238,238,238)');
+    // submit.style('border-radius', '10px');
 
     }
   
@@ -95,7 +95,15 @@ function setup() {
     
   }
 
-   
+  function showDesc(){
+    
+    push();
+    translate(width/2,height/2);
+    fill(255,255,255,100);
+    noStroke();
+    rect(-50,-50,100,100);  
+    pop();
+  } 
     
   function draw() {
     background(28,28,28);

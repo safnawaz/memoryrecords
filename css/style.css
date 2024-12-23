@@ -65,3 +65,38 @@ body {
   height: 50px;
   user-select: none;
 }
+
+#controlPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100vh;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.sliderGroup, .searchGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 80%;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+}
+
+input[type="text"] {
+  width: 10%;
+  padding: 5px;
+}

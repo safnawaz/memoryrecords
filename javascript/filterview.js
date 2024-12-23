@@ -336,7 +336,7 @@ class Raindrop {
   }
 
 class Memory {
-    constructor(track_id, description, vivid, memvalence, memenergy,unique, important,social,emo) {
+    constructor(track_id, description, vivid, memvalence, memenergy,unique, important,social,emo,artist) {
       this.song = track_id;
       this.description = description;
       this.descLength = textWidth(this.description);
@@ -348,6 +348,7 @@ class Memory {
       this.socialcontent = social;
       this.emotions = emo;
       this.numGrooves = map(this.vividness, 1, 7, 0.4, 0.1);
+      this.artist = artist;
      
       if (this.valence == 1){
         this.labelColor = color(78 ,139,212);
@@ -361,7 +362,7 @@ class Memory {
         this.labelColor = color(224,66,66);
       } 
       
-      this.vinyl = new VinylRecord(width * 1/10,height*7/24,70,this.numGrooves,this.labelColor);
+      this.vinyl = new VinylRecord(width * 1/10,height*5/24,70,this.numGrooves,this.labelColor);
       
 
       // admiration,adoration,amusement,calmness, joy, nostalgia,anger,awkwardness,fear, excitement,pride,sadness,surprise
@@ -476,13 +477,13 @@ class Memory {
 
 
     //calling confetti spinning
-      push();
-        translate(width / 2, height / 2);
-          for (let i = 0; i < this.numConfetti; i++) {
-            this.myConfetti[i].update(this.swirlSpeed);
-            this.myConfetti[i].display();
-      }
-      pop();
+      // push();
+      //   translate(width / 2, height / 2);
+      //     for (let i = 0; i < this.numConfetti; i++) {
+      //       this.myConfetti[i].update(this.swirlSpeed);
+      //       this.myConfetti[i].display();
+      // }
+      // pop();
     
   
     if (this.checkfriends == true){
@@ -509,7 +510,9 @@ class Memory {
               fill(255);
               textAlign(CENTER);
               
-              text(this.song,width * 1/10,height * 7/24);
+              text(this.song,width * 1/10,height * 5/24);
+              textSize(14);
+              text(this.artist,width * 1/10,height * 6/24);
         pop();
       
         
@@ -521,12 +524,12 @@ class Memory {
         }
       }
 
-      if (this.checklove == true){
-        for (let heart of this.myHearts){
-          heart.update();
-          heart.display();
-        }
-      }
+      // if (this.checklove == true){
+      //   for (let heart of this.myHearts){
+      //     heart.update();
+      //     heart.display();
+      //   }
+      // }
 
       push();
       drawSoundWave(width / 2, height * 5/8, 50, 0.5,.02, this.noise);
@@ -726,15 +729,11 @@ function setup() {
 
   // Initialising navigation buttons, left, right and shuffle
   let leftbutton = createButton("<");
-  leftbutton.position(width * 1/24, height * 2/24 );
+  leftbutton.position(width * 0.25/24, height * 4/24 );
   leftbutton.mousePressed(prevMem);
 
-  button = createButton('random record');
-  button.mousePressed(allMems);
-  button.position(width * 1.5/24, height * 2/24);
-
   let rightbutton = createButton(">");
-  rightbutton.position(width * 4/24, height * 2/24 );
+  rightbutton.position(width * 3.8/24, height * 4/24 );
   rightbutton.mousePressed(nextMem);
 
   // initialising search areas
@@ -782,7 +781,7 @@ function setup() {
 
     for (let i = 0; i < memoriesData.selectedmemories.length; i++) {
       let memData = memoriesData.selectedmemories[i];
-      let mem = new Memory(memData.Title, memData.description, memData.vivid, memData.memvalence, memData.memenergy, memData.unique,memData.important,memData.social,memData.emo);
+      let mem = new Memory(memData.Title, memData.description, memData.vivid, memData.memvalence, memData.memenergy, memData.unique,memData.important,memData.social,memData.emo,memData.Artist);
     
       allmemories.push(mem); // Add Memory object to array
     }
